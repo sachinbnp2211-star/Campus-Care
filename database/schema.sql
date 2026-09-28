@@ -1,5 +1,5 @@
 -- CampusCare Relational Database Schema
--- Fully compatible with TiDB Cloud (Serverless/Dedicated) and MySQL 8.0+
+-- 100% compatible with TiDB Cloud Serverless and MySQL 8.0+
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -19,14 +19,11 @@ CREATE TABLE IF NOT EXISTS categories (
   name VARCHAR(100) NOT NULL,
   description TEXT NULL,
   department_id INT UNSIGNED NULL,
-  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_categories_name (name),
-  KEY idx_categories_department (department_id),
-  CONSTRAINT fk_categories_department
-    FOREIGN KEY (department_id) REFERENCES departments (id)
-    ON DELETE SET NULL
+  KEY idx_categories_department (department_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 3. Users
@@ -47,10 +44,7 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE KEY uq_users_student_id (student_id),
   KEY idx_users_role (role),
   KEY idx_users_status (status),
-  KEY idx_users_department_id (department_id),
-  CONSTRAINT fk_users_department
-    FOREIGN KEY (department_id) REFERENCES departments (id)
-    ON DELETE SET NULL
+  KEY idx_users_department_id (department_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 4. Complaints
@@ -84,19 +78,7 @@ CREATE TABLE IF NOT EXISTS complaints (
   KEY idx_complaints_status_created (status, created_at),
   KEY idx_complaints_priority (priority),
   KEY idx_complaints_assigned_department (assigned_department_id),
-  KEY idx_complaints_assigned_staff (assigned_staff_id),
-  CONSTRAINT fk_complaints_user
-    FOREIGN KEY (user_id) REFERENCES users (id)
-    ON DELETE RESTRICT,
-  CONSTRAINT fk_complaints_category
-    FOREIGN KEY (category_id) REFERENCES categories (id)
-    ON DELETE RESTRICT,
-  CONSTRAINT fk_complaints_department
-    FOREIGN KEY (assigned_department_id) REFERENCES departments (id)
-    ON DELETE SET NULL,
-  CONSTRAINT fk_complaints_staff
-    FOREIGN KEY (assigned_staff_id) REFERENCES users (id)
-    ON DELETE SET NULL
+  KEY idx_complaints_assigned_staff (assigned_staff_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 5. Complaint Attachments
@@ -109,13 +91,7 @@ CREATE TABLE IF NOT EXISTS complaint_attachments (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_attachments_complaint_created (complaint_id, created_at),
-  KEY idx_attachments_uploaded_by (uploaded_by),
-  CONSTRAINT fk_attachments_complaint
-    FOREIGN KEY (complaint_id) REFERENCES complaints (id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_attachments_uploader
-    FOREIGN KEY (uploaded_by) REFERENCES users (id)
-    ON DELETE RESTRICT
+  KEY idx_attachments_uploaded_by (uploaded_by)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 6. Complaint Status History
@@ -145,13 +121,7 @@ CREATE TABLE IF NOT EXISTS complaint_status_history (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_history_complaint_created (complaint_id, created_at),
-  KEY idx_history_changed_by (changed_by),
-  CONSTRAINT fk_history_complaint
-    FOREIGN KEY (complaint_id) REFERENCES complaints (id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_history_changed_by
-    FOREIGN KEY (changed_by) REFERENCES users (id)
-    ON DELETE RESTRICT
+  KEY idx_history_changed_by (changed_by)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 7. Feedback
@@ -164,14 +134,7 @@ CREATE TABLE IF NOT EXISTS feedback (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_feedback_complaint (complaint_id),
-  KEY idx_feedback_user_created (user_id, created_at),
-  CONSTRAINT chk_feedback_rating CHECK (rating BETWEEN 1 AND 5),
-  CONSTRAINT fk_feedback_complaint
-    FOREIGN KEY (complaint_id) REFERENCES complaints (id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_feedback_user
-    FOREIGN KEY (user_id) REFERENCES users (id)
-    ON DELETE RESTRICT
+  KEY idx_feedback_user_created (user_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 8. Notifications
@@ -181,17 +144,11 @@ CREATE TABLE IF NOT EXISTS notifications (
   complaint_id INT UNSIGNED NULL,
   title VARCHAR(200) NOT NULL,
   message TEXT NOT NULL,
-  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_notifications_user_read_created (user_id, is_read, created_at),
-  KEY idx_notifications_complaint (complaint_id),
-  CONSTRAINT fk_notifications_user
-    FOREIGN KEY (user_id) REFERENCES users (id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_notifications_complaint
-    FOREIGN KEY (complaint_id) REFERENCES complaints (id)
-    ON DELETE SET NULL
+  KEY idx_notifications_complaint (complaint_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
