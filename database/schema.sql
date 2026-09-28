@@ -1,3 +1,9 @@
+-- CampusCare Relational Database Schema
+-- Compatible with MySQL 8.0+ and TiDB Cloud Serverless
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 1. Departments
 CREATE TABLE IF NOT EXISTS departments (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
@@ -5,8 +11,9 @@ CREATE TABLE IF NOT EXISTS departments (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_departments_name (name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 2. Categories
 CREATE TABLE IF NOT EXISTS categories (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
@@ -20,8 +27,9 @@ CREATE TABLE IF NOT EXISTS categories (
   CONSTRAINT fk_categories_department
     FOREIGN KEY (department_id) REFERENCES departments (id)
     ON UPDATE CASCADE ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 3. Users
 CREATE TABLE IF NOT EXISTS users (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
@@ -43,8 +51,9 @@ CREATE TABLE IF NOT EXISTS users (
   CONSTRAINT fk_users_department
     FOREIGN KEY (department_id) REFERENCES departments (id)
     ON UPDATE CASCADE ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 4. Complaints
 CREATE TABLE IF NOT EXISTS complaints (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   complaint_number VARCHAR(50) NOT NULL,
@@ -88,8 +97,9 @@ CREATE TABLE IF NOT EXISTS complaints (
   CONSTRAINT fk_complaints_staff
     FOREIGN KEY (assigned_staff_id) REFERENCES users (id)
     ON UPDATE CASCADE ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 5. Complaint Attachments
 CREATE TABLE IF NOT EXISTS complaint_attachments (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   complaint_id INT UNSIGNED NOT NULL,
@@ -106,8 +116,9 @@ CREATE TABLE IF NOT EXISTS complaint_attachments (
   CONSTRAINT fk_attachments_uploader
     FOREIGN KEY (uploaded_by) REFERENCES users (id)
     ON UPDATE CASCADE ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 6. Complaint Status History
 CREATE TABLE IF NOT EXISTS complaint_status_history (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   complaint_id INT UNSIGNED NOT NULL,
@@ -141,8 +152,9 @@ CREATE TABLE IF NOT EXISTS complaint_status_history (
   CONSTRAINT fk_history_changed_by
     FOREIGN KEY (changed_by) REFERENCES users (id)
     ON UPDATE CASCADE ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 7. Feedback
 CREATE TABLE IF NOT EXISTS feedback (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   complaint_id INT UNSIGNED NOT NULL,
@@ -160,8 +172,9 @@ CREATE TABLE IF NOT EXISTS feedback (
   CONSTRAINT fk_feedback_user
     FOREIGN KEY (user_id) REFERENCES users (id)
     ON UPDATE CASCADE ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 8. Notifications
 CREATE TABLE IF NOT EXISTS notifications (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id INT UNSIGNED NOT NULL,
@@ -179,4 +192,6 @@ CREATE TABLE IF NOT EXISTS notifications (
   CONSTRAINT fk_notifications_complaint
     FOREIGN KEY (complaint_id) REFERENCES complaints (id)
     ON UPDATE CASCADE ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;

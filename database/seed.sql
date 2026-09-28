@@ -1,3 +1,8 @@
+-- CampusCare Database Seed Data (Development / Demo Use Only)
+-- Note: Do NOT run against production environments with real data.
+
+SET FOREIGN_KEY_CHECKS = 0;
+
 INSERT INTO departments (id, name, description) VALUES
   (1, 'Administration', 'Administrative support and policy workflows'),
   (2, 'Hostel', 'Residential and hostel management operations'),
@@ -28,22 +33,23 @@ ON DUPLICATE KEY UPDATE
   department_id = VALUES(department_id),
   is_active = VALUES(is_active);
 
-INSERT INTO users (id, name, email, password, phone, role, department_id) VALUES
-  (1, 'Demo Administrator', 'admin@campus.edu', '$2a$10$hacWbZzGcvzlVnuJV8Kwre27NJBtHNHNMLoOnY9ldDbnGjxzg2y9G', '9000012345', 'admin', 1),
-  (2, 'Demo Electrical Staff', 'staff1@campus.edu', '$2a$10$sASffGw1UjcTRxj/cB7kaunCU9hJGnzyWey0x2onaozs.4Y4WYRNu', '9000012346', 'staff', 3),
-  (3, 'Demo Plumbing Staff', 'staff2@campus.edu', '$2a$10$sASffGw1UjcTRxj/cB7kaunCU9hJGnzyWey0x2onaozs.4Y4WYRNu', '9000012347', 'staff', 4),
-  (4, 'Demo Student One', 'student1@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012348', 'student', NULL),
-  (5, 'Demo Student Two', 'student2@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012349', 'student', NULL),
-  (6, 'Demo Student Three', 'student3@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012350', 'student', NULL),
-  (7, 'Demo Student Four', 'student4@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012351', 'student', NULL),
-  (8, 'Demo Student Five', 'student5@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012352', 'student', NULL)
+INSERT INTO users (id, name, email, password, phone, role, department_id, status) VALUES
+  (1, 'Demo Administrator', 'admin@campus.edu', '$2a$10$hacWbZzGcvzlVnuJV8Kwre27NJBtHNHNMLoOnY9ldDbnGjxzg2y9G', '9000012345', 'admin', 1, 'Active'),
+  (2, 'Demo Electrical Staff', 'staff1@campus.edu', '$2a$10$sASffGw1UjcTRxj/cB7kaunCU9hJGnzyWey0x2onaozs.4Y4WYRNu', '9000012346', 'staff', 3, 'Active'),
+  (3, 'Demo Plumbing Staff', 'staff2@campus.edu', '$2a$10$sASffGw1UjcTRxj/cB7kaunCU9hJGnzyWey0x2onaozs.4Y4WYRNu', '9000012347', 'staff', 4, 'Active'),
+  (4, 'Demo Student One', 'student1@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012348', 'student', NULL, 'Active'),
+  (5, 'Demo Student Two', 'student2@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012349', 'student', NULL, 'Active'),
+  (6, 'Demo Student Three', 'student3@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012350', 'student', NULL, 'Active'),
+  (7, 'Demo Student Four', 'student4@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012351', 'student', NULL, 'Active'),
+  (8, 'Demo Student Five', 'student5@campus.edu', '$2a$10$PhaZTQyWWBE2fqcLPVoMwOymHpt8yS9og3PZ2nf7FRzqGmh7efKLO', '9000012352', 'student', NULL, 'Active')
 ON DUPLICATE KEY UPDATE
   name = VALUES(name),
   email = VALUES(email),
   password = VALUES(password),
   phone = VALUES(phone),
   role = VALUES(role),
-  department_id = VALUES(department_id);
+  department_id = VALUES(department_id),
+  status = VALUES(status);
 
 INSERT INTO complaints (
   id, complaint_number, user_id, category_id, title, description, location,
@@ -114,3 +120,5 @@ ON DUPLICATE KEY UPDATE
   title = VALUES(title),
   message = VALUES(message),
   is_read = VALUES(is_read);
+
+SET FOREIGN_KEY_CHECKS = 1;
