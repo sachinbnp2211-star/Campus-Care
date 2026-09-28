@@ -1,6 +1,8 @@
 # CampusCare — Campus Complaint & Issue Resolution System
 
-CampusCare is an enterprise-grade, role-based campus issue tracking and complaint management platform designed for universities and colleges. It bridges students, department staff, and campus administrators with transparent issue routing, status tracking, SLA monitoring, and security controls.
+## 🚀 Live Production Links
+* **Live Web Application**: [https://campus-care-k0pl.onrender.com](https://campus-care-k0pl.onrender.com)
+* **Backend API Health**: [https://campuscare-backend-elmq.onrender.com/api/health](https://campuscare-backend-elmq.onrender.com/api/health)
 
 ---
 
