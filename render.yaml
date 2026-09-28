@@ -1,0 +1,48 @@
+services:
+  # Backend Web Service (Node.js/Express)
+  - type: web
+    name: campuscare-backend
+    env: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 3306
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: TRUST_PROXY
+        value: "true"
+    disk:
+      name: campuscare-uploads
+      mountPath: /var/data/uploads
+      sizeGB: 1
+
+  # Frontend Static Site (React/Vite SPA)
+  - type: static
+    name: campuscare-frontend
+    rootDir: client
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

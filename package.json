@@ -1,0 +1,21 @@
+{
+  "name": "campus-complaint-management",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build",
+    "build": "npm --prefix client run build",
+    "db:check": "npm --prefix server run db:check",
+    "db:setup": "npm --prefix server run db:setup",
+    "test:server": "npm --prefix server test",
+    "test": "npm --prefix server test",
+    "install:server": "npm --prefix server install",
+    "install:client": "npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
