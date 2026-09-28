@@ -45,11 +45,6 @@ services:
       - key: TRUST_PROXY
         value: "true"
 
-    disk:
-      name: campuscare-uploads
-      mountPath: /var/data/uploads
-      sizeGB: 1
-
   # Frontend Static Site
   - type: web
     name: campuscare-frontend
