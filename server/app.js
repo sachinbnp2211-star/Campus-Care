@@ -28,17 +28,28 @@ app.use(
 );
 
 // 3. CORS Configuration
-const allowedOrigins = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.split(',').map((url) => url.trim())
-  : ['http://localhost:5173', 'http://localhost:3000'];
+const defaultDevOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+const configuredOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((url) => url.trim().replace(/\/+$/, ''))
+  : defaultDevOrigins;
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? configuredOrigins
+  : Array.from(new Set([...defaultDevOrigins, ...configuredOrigins]));
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/+$/, '');
       if (
-        allowedOrigins.includes(origin) ||
+        allowedOrigins.includes(normalizedOrigin) ||
         (process.env.NODE_ENV !== 'production' && allowedOrigins.includes('*'))
       ) {
         return callback(null, true);
