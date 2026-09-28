@@ -6,7 +6,7 @@ services:
     rootDir: server
     buildCommand: npm install
     startCommand: npm start
-    plan: starter
+    plan: free
 
     envVars:
       - key: NODE_ENV
