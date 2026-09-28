@@ -251,8 +251,8 @@ const listAssignedComplaints = async (req, res, next) => {
        INNER JOIN users u ON u.id = c.user_id
        WHERE ${where}
        ORDER BY ${sortColumns[sortBy]} ${sortOrder.toUpperCase()}, c.id DESC
-       LIMIT ? OFFSET ?`,
-      [...parameters, limit, (page - 1) * limit]
+       LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
+      parameters
     );
     const total = Number(countRows[0].total);
     return res.json({

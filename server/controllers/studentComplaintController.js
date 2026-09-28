@@ -470,8 +470,8 @@ const listComplaints = async (req, res, next) => {
       `${complaintSelect}
        WHERE ${whereSql}
        ORDER BY ${listSortColumns[sortBy]} ${String(sortOrder).toUpperCase()}, c.id DESC
-       LIMIT ? OFFSET ?`,
-      [...parameters, limit, offset]
+       LIMIT ${limit} OFFSET ${offset}`,
+      parameters
     );
 
     const total = Number(countRows[0].total);

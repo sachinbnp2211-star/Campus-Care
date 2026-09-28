@@ -163,8 +163,8 @@ const listComplaints = async (req, res) => {
        LEFT JOIN users s ON s.id = c.assigned_staff_id AND s.role = 'staff'
        ${where}
        ORDER BY ${sortColumns[sortBy]} ${sortOrder.toUpperCase()}, c.id DESC
-       LIMIT ? OFFSET ?`,
-      [...parameters, limit, offset]
+       LIMIT ${limit} OFFSET ${offset}`,
+      parameters
     );
     const total = Number(countRows[0].total);
     res.json({
